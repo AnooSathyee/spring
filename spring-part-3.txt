@@ -1,0 +1,519 @@
+set collection using setter injection
+-------------------------------------
+injecting dependencies into target object by using target class setter is called as setter injection
+<set> tag used to inject set collection into spring bean.
+
+design bean(Pojo)
+public class Emp 
+{
+	int eno;
+	String ename;
+	Set<String> prodNames;
+	public int getEno() {
+		return eno;
+	}
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public Set<String> getProdNames() {
+		return prodNames;
+	}
+	public void setProdNames(Set<String> prodNames) {
+		this.prodNames = prodNames;
+	}
+	
+	public void disp()
+	{
+		System.out.println(eno +"-"+ename+"-"+prodNames);
+	}
+		
+}
+
+configure beans in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 		<property name="prodNames">
+ 			<set>
+ 				<value>A</value>
+ 				<value>B</value>
+ 				<value>C</value>
+ 				<value>B</value>
+ 			</set>
+ 		</property>
+ 	</bean>
+</beans>
+
+design container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+
+Map injection using setter injection
+------------------------------------
+public class Emp 
+{
+	int eno;
+	String ename;
+	Map<String,Integer> mp;
+	
+	
+	public int getEno() {
+		return eno;
+	}
+
+
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+
+
+	public String getEname() {
+		return ename;
+	}
+
+
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+
+
+	public Map<String, Integer> getMp() {
+		return mp;
+	}
+
+
+	public void setMp(Map<String, Integer> mp) {
+		this.mp = mp;
+	}
+
+
+	public void disp()
+	{
+		System.out.println(eno +"-"+ename+"-"+mp);
+	}
+		
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 		<property name="mp">
+ 			<map key-type="java.lang.String" value-type="java.lang.Integer">
+ 				<entry key="A" value="1"/>
+ 				<entry key="C" value="3"/>
+ 				<entry key="B" value="2"/>
+ 			</map>
+ 		</property>
+ 	</bean>
+</beans>
+
+design container
+
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+
+Req:explain Inner Bean?
+-----------------------
+design one bean inside another bean is called as InnerBean
+InnerBean is just like InnerClass in java
+we can achieve maintainability by using InnerBean
+we can't achieve re-usability by using InnerBean
+"HAS-A" relationship is mandatory to achieve InnerBean
+
+Emp ---<> Address
+
+design dependency class
+public class Address
+{
+	int hno;
+	String loc;
+	public int getHno() {
+		return hno;
+	}
+	public void setHno(int hno) {
+		this.hno = hno;
+	}
+	public String getLoc() {
+		return loc;
+	}
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
+	
+	public String toString()
+	{
+		return hno+"-"+loc;
+	}
+}
+
+design target class
+public class Emp 
+{
+	int eno;
+	String ename;
+	Address addr;
+	public int getEno() {
+		return eno;
+	}
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public Address getAddr() {
+		return addr;
+	}
+	public void setAddr(Address addr) {
+		this.addr = addr;
+	}	
+	public void disp()
+	{
+		System.out.println(eno+"-"+ename+"-"+addr.getHno()+"-"+addr.getLoc());
+	}
+}
+
+configure beans in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 		<property name="addr">
+ 			<bean id="addr" class="com.ls.Address"> 
+ 				<property name="hno" value="1"/>
+ 				<property name="loc" value="HYD"/>
+ 			</bean>
+ 		</property>
+ 	</bean>
+</beans>
+
+design container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+
+Explain wiring?
+--------------
+link one object with another object is called as "wiring"
+"HAS-A" relationship is mandatory to achieve "wiring"
+	wiring divided into 2 types
+		manual wiring
+		auto-wiring
+
+manual wiring
+-------------
+manual wiring done by the developer with the help of "ref" attribute
+
+steps
+----
+identify dependency class
+identify dependent class
+provide "HAS-A" relationship between 2 classes
+configure dependent and dependency classes in xml
+link dependency class with dependent class via "ref" attribute
+
+design dependency class
+public class Address
+{
+	int hno;
+	String loc;
+	public int getHno() {
+		return hno;
+	}
+	public void setHno(int hno) {
+		this.hno = hno;
+	}
+	public String getLoc() {
+		return loc;
+	}
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
+	
+	public String toString()
+	{
+		return hno+"-"+loc;
+	}
+}
+
+design dependent class
+public class Emp 
+{
+	int eno;
+	String ename;
+	Address addr;
+	public int getEno() {
+		return eno;
+	}
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public Address getAddr() {
+		return addr;
+	}
+	public void setAddr(Address addr) {
+		this.addr = addr;
+	}	
+	public void disp()
+	{
+		System.out.println(eno+"-"+ename+"-"+addr.getHno()+"-"+addr.getLoc());
+	}
+}
+
+configure beans in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 		<property name="addr" ref="address"/>
+ 	</bean>
+ 	<bean id="address" class="com.ls.Address"> 
+ 				<property name="hno" value="1"/>
+ 				<property name="loc" value="HYD"/>
+ 	</bean>
+</beans>
+
+design container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+auto-wiring
+-----------
+auto-wiring used to inject dependency class object with target class object
+auto-wiring done by the IOC(container)
+auto-wiring disabled by default
+we will activate auto-wiring by configuring "auto-wire" attribute at target bean level
+auto-wiring comes with values as
+			byName
+			byType
+			no
+			constructor
+byName
+------
+int eno;
+	eno-->name
+	int -->type
+Address addr -->addr:name
+		type:address
+IOC will pick dependency class bean id and compare with target class HAS-A relationship variable name
+	if both matches then IOC will inject dependency class object with target class object
+
+
+design dependency class
+public class Address
+{
+	int hno;
+	String loc;
+	public int getHno() {
+		return hno;
+	}
+	public void setHno(int hno) {
+		this.hno = hno;
+	}
+	public String getLoc() {
+		return loc;
+	}
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
+	
+	public String toString()
+	{
+		return hno+"-"+loc;
+	}
+}
+
+design dependent class
+public class Emp 
+{
+	int eno;
+	String ename;
+	Address addr;
+	public int getEno() {
+		return eno;
+	}
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public Address getAddr() {
+		return addr;
+	}
+	public void setAddr(Address addr) {
+		this.addr = addr;
+	}	
+	public void disp()
+	{
+		System.out.println(eno+"-"+ename+"-"+addr.getHno()+"-"+addr.getLoc());
+	}
+}
+
+configure beans in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp" autowire="byName">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 	</bean>
+ 	<bean id="address" class="com.ls.Address"> 
+ 		<property name="hno" value="1"/>
+ 		<property name="loc" value="HYD"/>
+ 	</bean>
+</beans>
+
+design container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+
+byType
+------
+IOC will pick dependency bean class and compare with target class HAS-A relationship variable type
+		if both matches then IOC will inject dependency class object with target class object
+design dependency class
+public class Address
+{
+	int hno;
+	String loc;
+	public int getHno() {
+		return hno;
+	}
+	public void setHno(int hno) {
+		this.hno = hno;
+	}
+	public String getLoc() {
+		return loc;
+	}
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
+	
+	public String toString()
+	{
+		return hno+"-"+loc;
+	}
+}
+
+design dependent class
+public class Emp 
+{
+	int eno;
+	String ename;
+	Address addr;
+	public int getEno() {
+		return eno;
+	}
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public Address getAddr() {
+		return addr;
+	}
+	public void setAddr(Address addr) {
+		this.addr = addr;
+	}	
+	public void disp()
+	{
+		System.out.println(eno+"-"+ename+"-"+addr.getHno()+"-"+addr.getLoc());
+	}
+}
+
+configure beans in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp" autowire="byType">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 	</bean>
+ 	<bean class="com.ls.Address"> 
+ 		<property name="hno" value="1"/>
+ 		<property name="loc" value="HYD"/>
+ 	</bean>
+</beans>
+
+design container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+} 

@@ -1,0 +1,170 @@
+Spring
+------
+Spring is framework which will be used to design standalone as well as web-applications.
+
+standalone applications
+-----------------------
+code installed in your machine to work application is called as standalone  applications.
+eclipe/Media-player are examples for standalone applications
+
+web-application
+---------------
+application deployed in server location
+client(Browser) -->server
+
+client send request to Server
+Server process the request and give response
+Gmail is example for web-application
+
+Req:What are modules exist in spring?
+-------------------------------------
+Spring Core
+Spring Jdbc
+Spring ORM
+Spring AOP
+Spring WebMVC
+Spring Security
+
+Req:Why we will go for Spring? or what are advantages of Spring?
+----------------------------------------------------------------
+Spring is non-invasive framework
+	non-invasive framework means framework does not force us to extend/implement classes/inferfaces from user-defined classes
+Spring is light-weight
+	 spring comes with lot of modules like Core/JDBC/ORM/MVC.no need to integrate all modules in our project
+	based on requirement we can integrate corresponding module in our project
+Spring comes with IOC
+		IOC:Inversion of control
+		IOC will reduce burden on the developer
+		giving developer responsibilities like object creation and values injection to pojo properties to container is called as IOC
+		IOC will simplify developer's life
+dependency injection
+		target(dependent) --<> dependency
+		inject dependencies into target object is called as dependency injection
+by using dependency injection we can achieve loosely coupling
+we can achieve loosely coupling by using interface
+
+class 1--->class2    -->tightly coupled
+class 1 -->interface -->class2 ==>loosely coupled
+boiler plate code should be written as part of frawework itself.
+
+Req:explain spring container responsibilities?
+----------------------------------------------
+spring container detect the classes
+once classes are detected then spring container create an object to detected classes
+inject values to that detected class properties
+link one object with another object if required
+destroy the objects when we stop the container
+
+Explain IOC types?
+------------------
+we have 2 types of IOC exist
+	BeanFactory
+	ApplicationContext
+BeanFactory is lazy initializer means after BeanFactory object creation only xml loaded into memory
+ApplicationContext is eager loading means after BeanFactory object creation only xml loaded into memory
+BeanFactory does not support annotation based applications where as ApplicationContext support annotation based applications
+BeanFactory does not support "BeanPostProcessor" where as ApplicationContext support "BeanPostProcessor"
+ApplicationContext is advanced container rather than BeanFactory
+
+Req:Explain dependency injection?
+---------------------------------
+inject dependencies into target object is called as dependency injection
+by using dependency injection we can achieve loosely coupling
+we can achieve loosely coupling by using interface
+IOC will perform dependency injection
+
+dependency injection divided into 2 types
+	setter injection
+	construction injection
+
+setter injection
+---------------
+inject dependencies into target object by using target class setter is called as setter injection
+<property> tag will be used to perform setter injection
+
+construction injection
+----------------------
+inject dependencies into target object by using target class constructor is called as constructor injection
+<constructor-arg> tag will be used to perform setter injection
+
+Req:How many ways will we configure spring applications?
+--------------------------------------------------------
+	XML based configuration
+	java based configuration
+	annotation based configuration
+
+design application with XML based configuration with setter injection
+--------------------------------------------------------------------
+design maven project with dependencies as
+	<dependencies>
+  		<dependency>
+   			 <groupId>org.springframework</groupId>
+    		<artifactId>spring-context</artifactId>
+    		<version>5.2.8.RELEASE</version>
+		</dependency>		
+  	</dependencies>
+
+design pojo class
+
+public class Product 
+{
+	int pno;
+	String pname;
+	double price;
+	public int getPno() {
+		return pno;
+	}
+	public void setPno(int pno) {
+		this.pno = pno;
+	}
+	public String getPname() {
+		return pname;
+	}
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public void disp()
+	{
+		System.out.println(pno+"-"+pname+"-"+price);
+	}
+	
+}
+
+configure pojo class in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="prod" class="com.ls.Product">
+ 		<property name="pno" value="100"/>
+ 		<property name="pname" value="Nokia"/>
+ 		<property name="price" value="7000"/>
+ 	</bean>
+</beans>
+
+design container
+
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		//container creation
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		//Product p = ac.getBean("prod",Product.class);
+		Product p=(Product)ac.getBean("prod");
+		p.disp();
+	}
+}		
+
+
+
+
+		
+
+

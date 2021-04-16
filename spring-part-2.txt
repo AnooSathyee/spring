@@ -1,0 +1,203 @@
+dependency injection
+--------------------
+class Emp
+{
+	eno,ename,esal
+}
+
+Emp class is called as dependent why because Emp class depends on primitives
+primitives(eno,ename and esal) acts as dependencies
+
+injecting dependencies into target object is called as dependency injection
+IOC will perform dependency injection
+we can achieve loosely coupling by using dependency injection
+
+primitive injectiction with setters
+-----------------------------------
+inject dependencies into target class object by using target class setter is called setter injection
+<property> tag used to implement setter injection
+
+design pojo class
+public class Emp 
+{
+	int eno;
+	String ename;
+	String dep;
+	public int getEno() {
+		return eno;
+	}
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public String getDep() {
+		return dep;
+	}
+	public void setDep(String dep) {
+		this.dep = dep;
+	}
+	
+	public void disp()
+	{
+		System.out.println(eno+"-"+ename+"-"+dep);
+	}
+}
+
+configure pojo in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 		<property name="dep" value="Dev"/>
+ 	</bean>
+</beans>
+
+create container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+
+
+primitive injection using constructor
+-------------------------------------
+injecting dependencies into target object by using target class constructor is called as constructor injection
+<constructor-arg> tag will be used to implement constructor-injection
+constructor injection internally uses constructor to inject dependencies into target object
+
+design pojo
+public class Emp 
+{
+	int eno;
+	String ename;
+	String dep;
+		
+	public Emp(int eno, String ename, String dep)
+	{
+		this.eno = eno;
+		this.ename = ename;
+		this.dep = dep;
+	}
+
+	public void disp()
+	{
+		System.out.println(eno+"-"+ename+"-"+dep);
+	}
+}
+
+configure pojo in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp">
+ 		<constructor-arg name="eno" value="100"/>
+ 		<constructor-arg name="ename" value="A"/>
+ 		<constructor-arg name="dep" value="Dev"/>
+ 	</bean>
+</beans>
+
+design container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+
+Req:what is difference between setter injection and constructor injection?
+--------------------------------------------------------------------------
+setter injection will use setters to inject dependencies into target object where as constructor injection will use constructor to inject dependencies into target object
+<property> tag will be used to implement setter-injection where as <constructor-arg> tag will be used to inject constructor injection
+setter injection will over-ride constructor injection.
+partial injection possible in case of setter injection where as partial injection is not possible in case of construction
+suppose your class contains final variables then constructor injection is recommended way rather than setter injection
+suppose your class conatins more no of properties then constructor injection is recommended way rather than setter injection
+
+collections injection using setter injection?
+---------------------------------------------
+<list> tag will be used to list collection into spring bean
+<set> tag will be used to set collection into spring bean
+<map> tag will be used to map collection into spring bean
+<properties> tag will be used to properties collection into spring bean
+
+design pojo
+
+public class Emp 
+{
+	int eno;
+	String ename;
+	List<String> dep;
+	public int getEno() {
+		return eno;
+	}
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public List<String> getDep() {
+		return dep;
+	}
+	public void setDep(List<String> dep) {
+		this.dep = dep;
+	}
+	
+	public void disp()
+	{
+		System.out.println(eno+"-"+ename+"-"+dep);
+	}
+	
+}
+
+configure pojo in xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	<bean id="emp" class="com.ls.Emp">
+ 		<property name="eno" value="100"/>
+ 		<property name="ename" value="A"/>
+ 		<property name="dep">
+ 			<list>
+ 				<value>Dev</value>
+ 				<value>QA</value>
+ 				<value>Release</value>
+ 			</list>
+ 		</property>
+ 	</bean>
+</beans>
+
+design container
+public class Driver {
+
+	public static void main(String[] args) 
+	{
+		ApplicationContext ac=new ClassPathXmlApplicationContext("beans.xml");
+		Emp e=(Emp)ac.getBean("emp");
+		e.disp();
+	}
+}
+
+
+
